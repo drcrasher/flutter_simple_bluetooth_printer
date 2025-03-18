@@ -12,13 +12,18 @@ import 'flutter_simple_bluetooth_printer_platform_interface.dart';
 
 /// By Xiao 2023/1
 /// An implementation of [FlutterSimpleBluetoothPrinterPlatform] that uses method channels.
-class MethodChannelFlutterSimpleBluetoothPrinter extends FlutterSimpleBluetoothPrinterPlatform {
+class MethodChannelFlutterSimpleBluetoothPrinter
+    extends FlutterSimpleBluetoothPrinterPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('flutter_simple_bluetooth_printer/method');
+  final methodChannel = const MethodChannel(
+    'flutter_simple_bluetooth_printer/method',
+  );
 
   @visibleForTesting
-  final eventChannel = const EventChannel('flutter_simple_bluetooth_printer/event');
+  final eventChannel = const EventChannel(
+    'flutter_simple_bluetooth_printer/event',
+  );
 
   MethodChannelFlutterSimpleBluetoothPrinter() {
     methodChannel.setMethodCallHandler((call) {
@@ -33,22 +38,27 @@ class MethodChannelFlutterSimpleBluetoothPrinter extends FlutterSimpleBluetoothP
     });
   }
 
-  final StreamController<MethodCall> _methodStreamController = StreamController.broadcast();
+  final StreamController<MethodCall> _methodStreamController =
+      StreamController.broadcast();
 
   Stream<MethodCall> get _methodStream => _methodStreamController.stream;
 
-  Stream<MethodCall> get _scanResultMethodStream => _methodStream.where((event) => event.method == "scanResult");
+  Stream<MethodCall> get _scanResultMethodStream =>
+      _methodStream.where((event) => event.method == "scanResult");
   final PublishSubject _stopScanPill = PublishSubject();
 
-  final BehaviorSubject<List<BluetoothDevice>> _scanResults = BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<BluetoothDevice>> _scanResults =
+      BehaviorSubject.seeded([]);
 
   @override
   Stream<List<BluetoothDevice>> get scanResults => _scanResults.stream;
 
-  final StreamController<BTConnectState> _connectStateStreamController = StreamController.broadcast();
+  final StreamController<BTConnectState> _connectStateStreamController =
+      StreamController.broadcast();
 
   @override
-  Stream<BTConnectState> get connectState => _connectStateStreamController.stream;
+  Stream<BTConnectState> get connectState =>
+      _connectStateStreamController.stream;
 
   bool _isBLE = false;
 
@@ -75,7 +85,8 @@ class MethodChannelFlutterSimpleBluetoothPrinter extends FlutterSimpleBluetoothP
       // Clear result
       _scanResults.add([]);
       await methodChannel.invokeMethod("startDiscovery");
-      yield* _scanResultMethodStream.takeUntil(_stopScanPill)
+      yield* _scanResultMethodStream
+          .takeUntil(_stopScanPill)
           .doOnDone(stopDiscovery)
           .map((event) => event.arguments)
           .transform(StreamTransformer(_addDeviceTransform));
@@ -86,19 +97,23 @@ class MethodChannelFlutterSimpleBluetoothPrinter extends FlutterSimpleBluetoothP
     }
   }
 
-
-  StreamSubscription<BluetoothDevice> _addDeviceTransform(Stream<dynamic> input, bool cancelOnError) {
+  StreamSubscription<BluetoothDevice> _addDeviceTransform(
+    Stream<dynamic> input,
+    bool cancelOnError,
+  ) {
     var controller = StreamController<BluetoothDevice>(sync: true);
     controller.onListen = () {
-      var subscription = input.listen((data) {
-        var device = BluetoothDevice.fromMap(data);
-        if (_tryAddDevice(device)) {
-          controller.add(device);
-        }
-      },
-          onError: controller.addError,
-          onDone: controller.close,
-          cancelOnError: cancelOnError);
+      var subscription = input.listen(
+        (data) {
+          var device = BluetoothDevice.fromMap(data);
+          if (_tryAddDevice(device)) {
+            controller.add(device);
+          }
+        },
+        onError: controller.addError,
+        onDone: controller.close,
+        cancelOnError: cancelOnError,
+      );
       controller
         ..onPause = subscription.pause
         ..onResume = subscription.resume
@@ -149,15 +164,22 @@ class MethodChannelFlutterSimpleBluetoothPrinter extends FlutterSimpleBluetoothP
   /// [timeout] The timeout for BLE connection. For non-BLE connection, this is ignored.
   /// Throw [BTException] if failed.
   @override
-  Future<bool> connect(
-      {required String address, bool isBLE = true, Duration timeout = const Duration(seconds: 7)}) async {
+  Future<bool> connect({
+    required String address,
+    bool isBLE = true,
+    Duration timeout = const Duration(seconds: 7),
+  }) async {
     try {
       if (Platform.isIOS) {
         _isBLE = true;
       } else {
         _isBLE = isBLE;
       }
-      Map<String, dynamic> args = {"address": address, "isBLE": _isBLE, "timeout": timeout.inMilliseconds};
+      Map<String, dynamic> args = {
+        "address": address,
+        "isBLE": _isBLE,
+        "timeout": timeout.inMilliseconds,
+      };
       return await methodChannel.invokeMethod("connect", args);
     } on PlatformException catch (e) {
       throw BTException.fromPlatform(e);
@@ -189,7 +211,7 @@ class MethodChannelFlutterSimpleBluetoothPrinter extends FlutterSimpleBluetoothP
   /// Throw [BTException] if failed.
   @override
   Future<bool> writeText(String text) async {
-    return writeRawData(utf8.encode(text) as Uint8List);
+    return writeRawData(utf8.encode(text));
   }
 
   /// Write raw data to the connected device. Must connect to a device first.

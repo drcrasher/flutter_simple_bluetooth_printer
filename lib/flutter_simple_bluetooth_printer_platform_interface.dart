@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:flutter_simple_bluetooth_printer/models/connect_state.dart';
-import 'package:flutter_simple_bluetooth_printer/models/printer_devices.dart';
+import 'models/connect_state.dart';
+import 'models/printer_devices.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'flutter_simple_bluetooth_printer_method_channel.dart';
 
@@ -12,7 +12,8 @@ abstract class FlutterSimpleBluetoothPrinterPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static FlutterSimpleBluetoothPrinterPlatform _instance = MethodChannelFlutterSimpleBluetoothPrinter();
+  static FlutterSimpleBluetoothPrinterPlatform _instance =
+      MethodChannelFlutterSimpleBluetoothPrinter();
 
   /// The default instance of [FlutterSimpleBluetoothPrinterPlatform] to use.
   ///
@@ -45,8 +46,11 @@ abstract class FlutterSimpleBluetoothPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('scan() has not been implemented.');
   }
 
-  Future<bool> connect(
-      {required String address, bool isBLE = true, Duration timeout = const Duration(seconds: 7)}) async {
+  Future<bool> connect({
+    required String address,
+    bool isBLE = true,
+    Duration timeout = const Duration(seconds: 7),
+  }) async {
     throw UnimplementedError('connect() has not been implemented.');
   }
 

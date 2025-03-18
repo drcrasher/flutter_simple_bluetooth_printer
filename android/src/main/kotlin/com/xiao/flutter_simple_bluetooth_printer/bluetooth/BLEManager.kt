@@ -9,11 +9,11 @@ import com.polidea.rxandroidble3.Timeout
 import com.polidea.rxandroidble3.scan.IsConnectable
 import com.polidea.rxandroidble3.scan.ScanResult
 import com.polidea.rxandroidble3.scan.ScanSettings
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.core.Single
-import java.util.concurrent.TimeUnit
 import io.flutter.plugin.common.MethodChannel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.Disposable
+import java.util.concurrent.TimeUnit
 
 /**
  * @author Xiao

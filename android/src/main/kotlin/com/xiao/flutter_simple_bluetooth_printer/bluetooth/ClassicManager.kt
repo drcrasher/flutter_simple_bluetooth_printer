@@ -7,13 +7,12 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.util.Log
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import io.flutter.plugin.common.MethodChannel.Result
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import java.util.*
+import java.util.UUID
 
 /**
  * @author xiao

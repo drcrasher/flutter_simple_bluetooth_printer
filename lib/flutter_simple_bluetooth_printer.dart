@@ -1,18 +1,19 @@
 import 'dart:typed_data';
 
-import 'package:flutter_simple_bluetooth_printer/models/connect_state.dart';
-import 'package:flutter_simple_bluetooth_printer/models/printer_devices.dart';
+import 'models/connect_state.dart';
+import 'models/printer_devices.dart';
 import 'flutter_simple_bluetooth_printer_platform_interface.dart';
 
-export 'package:flutter_simple_bluetooth_printer/models/BTError.dart';
-export 'package:flutter_simple_bluetooth_printer/models/connect_state.dart';
-export 'package:flutter_simple_bluetooth_printer/models/printer_devices.dart';
+export 'models/BTError.dart';
+export 'models/connect_state.dart';
+export 'models/printer_devices.dart';
 
 /// By Xiao 2023/1
 class FlutterSimpleBluetoothPrinter {
   FlutterSimpleBluetoothPrinter._();
 
-  static final FlutterSimpleBluetoothPrinter _instance = FlutterSimpleBluetoothPrinter._();
+  static final FlutterSimpleBluetoothPrinter _instance =
+      FlutterSimpleBluetoothPrinter._();
 
   static FlutterSimpleBluetoothPrinter get instance => _instance;
 
@@ -20,11 +21,13 @@ class FlutterSimpleBluetoothPrinter {
   /// For iOS, it will return an empty list.
   /// Throw [BTException] if failed.
   Future<List<BluetoothDevice>> getAndroidPairedDevices() {
-    return FlutterSimpleBluetoothPrinterPlatform.instance.getAndroidPairedDevices();
+    return FlutterSimpleBluetoothPrinterPlatform.instance
+        .getAndroidPairedDevices();
   }
 
   /// Get the Discovery result stream.
-  Stream<List<BluetoothDevice>> get scanResults => FlutterSimpleBluetoothPrinterPlatform.instance.scanResults;
+  Stream<List<BluetoothDevice>> get scanResults =>
+      FlutterSimpleBluetoothPrinterPlatform.instance.scanResults;
 
   /// Starts scan for Bluetooth LE devices
   /// Note: This is a continuous behavior, don't forget to call [stopDiscovery].
@@ -42,15 +45,25 @@ class FlutterSimpleBluetoothPrinter {
   /// Scan for Bluetooth LE devices until [timeout] is reached.
   /// Throw [BTException] if failed.
   Future<List<BluetoothDevice>> scan({required Duration timeout}) {
-    return FlutterSimpleBluetoothPrinterPlatform.instance.scan(timeout: timeout);
+    return FlutterSimpleBluetoothPrinterPlatform.instance.scan(
+      timeout: timeout,
+    );
   }
 
   /// Connect to a Bluetooth device via address.
   /// [isBLE] Whether this is a BLE device. In iOS, this is ignored cause we only support BLE for iOS.
   /// [timeout] The timeout for BLE connection. For non-BLE connection, this is ignored.
   /// Throw [BTException] if failed.
-  Future<bool> connect({required String address, bool isBLE = true, Duration timeout = const Duration(seconds: 7)}) {
-    return FlutterSimpleBluetoothPrinterPlatform.instance.connect(address: address, isBLE: isBLE, timeout: timeout);
+  Future<bool> connect({
+    required String address,
+    bool isBLE = true,
+    Duration timeout = const Duration(seconds: 7),
+  }) {
+    return FlutterSimpleBluetoothPrinterPlatform.instance.connect(
+      address: address,
+      isBLE: isBLE,
+      timeout: timeout,
+    );
   }
 
   /// Disconnect from a Bluetooth device.
@@ -61,7 +74,8 @@ class FlutterSimpleBluetoothPrinter {
   }
 
   /// Get the connection state stream.
-  Stream<BTConnectState> get connectState => FlutterSimpleBluetoothPrinterPlatform.instance.connectState;
+  Stream<BTConnectState> get connectState =>
+      FlutterSimpleBluetoothPrinterPlatform.instance.connectState;
 
   /// Get the current Connect State.
   Future<BTConnectState> currentConnectState() {

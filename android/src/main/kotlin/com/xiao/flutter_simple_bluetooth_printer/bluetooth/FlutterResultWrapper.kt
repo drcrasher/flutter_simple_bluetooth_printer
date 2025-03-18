@@ -1,7 +1,5 @@
 package com.xiao.flutter_simple_bluetooth_printer.bluetooth
 
-import io.flutter.plugin.common.MethodChannel.Result
-
 /**
  * @author Xiao
  * @date 2023/01
